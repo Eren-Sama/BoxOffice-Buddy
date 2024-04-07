@@ -718,6 +718,7 @@ class MovieBookingApp(QMainWindow):
         num_snacks_combo = self.snacks_combo_slider.value()
 
         selected_snacks = any([num_popcorns, num_drinks, num_snacks_combo])
+        
         dialog = ConfirmationDialog(selected_movie, selected_state, selected_city, selected_theater,
                                 selected_showtime, selected_seats, num_popcorns, num_drinks, num_snacks_combo, total_price, selected_date, selected_language, selected_quality)
         dialog.exec_()
