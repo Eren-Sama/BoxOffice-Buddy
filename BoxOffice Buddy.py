@@ -1,5 +1,7 @@
 import sys
 import os
+import qrcode
+import io
 import webbrowser
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QComboBox,
@@ -13,14 +15,55 @@ class ConfirmationDialog(QDialog):
         super().__init__()
         self.setWindowTitle("BOB Ticket")  # Set the window title
         self.setWindowIcon(QIcon('D:\\Codes\\PPS Project OOPS\\Static\\img\\Colorful_Retro_Illustrative_Tasty_Popcorn_Logo2-removebg-preview.png'))
-        layout = QVBoxLayout()
+        # layout = QHBoxLayout()
+
+        # IMDb URLs for each movie
+        imdb_urls = {
+            "Dune: Part 2 (UA)": "https://www.imdb.com/title/tt15239678/",
+            "Shaitaan (A)": "https://www.imdb.com/title/tt27744786/",
+            "Kung Fu Panda 4 (UA)": "https://www.imdb.com/title/tt21692408/",
+            "Monkey Man (A)": "https://www.imdb.com/title/tt9214772/",
+            "Maidaan (UA)": "https://www.imdb.com/title/tt10869778/",
+            "Godzilla x Kong: The New Empire (UA)": "https://www.imdb.com/title/tt14539740/"
+            # Add IMDb URLs for all movies you're displaying
+        }
+
+        # Modify the QR code data to include IMDb URL
+        imdb_url = imdb_urls.get(movie.title, 'N/A')
+        qr_data = imdb_url
+
+        movie_qr_layout = QHBoxLayout()
 
         # Display selected movie poster with adjusted size and alignment
         movie_poster_label = QLabel()
         movie_poster_pixmap = QPixmap(movie.poster_path)
         movie_poster_label.setPixmap(movie_poster_pixmap.scaledToWidth(200))
         movie_poster_label.setAlignment(Qt.AlignCenter)  # Align the poster to the center
-        layout.addWidget(movie_poster_label)
+        movie_qr_layout.addWidget(movie_poster_label)
+        # layout.addWidget(movie_poster_label)
+
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=5,
+            border=2,
+        )
+        qr.add_data(qr_data)
+        qr.make(fit=True)
+
+        img = qr.make_image(fill_color="black", back_color="white")
+        buffer = io.BytesIO()
+        img.save(buffer, "PNG")
+        qr_code_image = QPixmap.fromImage(QImage.fromData(buffer.getvalue()))
+
+        # Display QR code
+        qr_code_label = QLabel()
+        qr_code_label.setPixmap(qr_code_image)
+        movie_qr_layout.addWidget(qr_code_label)
+
+        # Create a layout to hold the movie details and QR code layout
+        main_layout = QVBoxLayout()
+        main_layout.addLayout(movie_qr_layout)
 
         # Display selected movie details
         movie_details_label = QLabel(f"<b>Movie:</b> {movie.title}<br>"
@@ -30,37 +73,37 @@ class ConfirmationDialog(QDialog):
                                      f"<b>Description:</b> {movie.description}<br>"
                                      f"<b>Language:</b> {selected_language}<br>"
                                      f"<b>Quality:</b> {selected_quality}<br>")
-        layout.addWidget(movie_details_label)
+        main_layout.addWidget(movie_details_label)
 
         # Display selected location and showtime
         location_label = QLabel(f"<b>Location:</b> {state}, {city}<br>"
                                 f"<b>Theater:</b> {theater}<br>"
                                 f"<b>Showtime:</b> {showtime}<br>"
                                 f"<b>Date:</b> {selected_date.day()}-{selected_date.month()}-{selected_date.year()}<br>")
-        layout.addWidget(location_label)
+        main_layout.addWidget(location_label)
 
         # Display selected seats
         seats_label = QLabel(f"<b>Selected Seats:</b> {', '.join(selected_seats)}<br>")
-        layout.addWidget(seats_label)
+        main_layout.addWidget(seats_label)
 
         # Display if snacks are selected
         snacks_label = QLabel(f"<b>Snacks:</b> {'Yes' if num_popcorns + num_drinks + num_snacks_combo > 0 else 'No'}<br>"
                               f"<b>Popcorns:</b> {num_popcorns}<br>"
                               f"<b>Drinks:</b> {num_drinks}<br>"
                               f"<b>Snacks Combo:</b> {num_snacks_combo}<br>")
-        layout.addWidget(snacks_label)
+        main_layout.addWidget(snacks_label)
 
         # Calculate total price including 18% GST
         total_with_gst = total_price * 1.18
         total_label = QLabel(f"<b>Total Price (including 18% GST):</b> ₹{total_price:.2f}<br>")
-        layout.addWidget(total_label)
+        main_layout.addWidget(total_label)
 
         # Add a button to download ticket as an image
         download_button = QPushButton("Download Ticket")
         download_button.clicked.connect(self.save_ticket_as_image)
-        layout.addWidget(download_button)
+        main_layout.addWidget(download_button)
 
-        self.setLayout(layout)
+        self.setLayout(main_layout)
 
     def save_ticket_as_image(self):
         default_file_name = "BoxOffice Buddy Ticket.png"
