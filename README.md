@@ -4,10 +4,6 @@
 
 ---
 
-<img align="center" src="https://media.giphy.com/media/3o6gE5aYpYbDNzfq6Y/giphy.gif" height="250"/>
-
----
-
 ## 💡 About the Project
 
 **BoxOffice Buddy** is a modern, desktop-based movie ticket reservation app designed using **Python** and **PyQt5**. It provides users with a seamless movie booking experience — from selecting their favorite flick and preferred seats to enjoying snacks and completing the booking with **PayPal**-secure payments.
