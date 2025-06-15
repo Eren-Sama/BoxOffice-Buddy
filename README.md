@@ -40,14 +40,14 @@
 
 ```bash
 # 1️⃣ Clone the repo
-git clone https://github.com/yourusername/boxoffice-buddy.git
-cd boxoffice-buddy
+git clone https://github.com/Eren-Sama/BoxOffice-Buddy.git
+cd BoxOffice-Buddy
 
 # 2️⃣ Install dependencies
 pip install -r requirements.txt
 
 # 3️⃣ Run the app
-python movie_booking_app.py
+python "BoxOffice Buddy.py"
 ```
 
 ---
