@@ -68,19 +68,6 @@ python movie_booking_app.py
 
 ---
 
-## 🤝 Contributing
-
-Have ideas or improvements?  
-Feel free to **fork** the repo and open a **pull request** with your changes.
-
-We welcome:
-- 🐞 Bug fixes
-- 🚀 Feature enhancements
-- 🧪 Performance optimizations
-- 🧹 Code refactors
-
----
-
 ## 📬 Contact
 
 Drop your suggestions, feature requests, or just say hi!  
